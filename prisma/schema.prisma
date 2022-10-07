@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id         String      @id @default(cuid())
+  created    DateTime    @default(now())
+  email      String      @unique
+  username   String? 
+  avatar     String?
+  petitions  Petition[]
+  signatures Signature[]
+}
+
+model Petition {
+  id             String      @id @default(cuid())
+  created        DateTime    @default(now())
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String
+  title          String
+  description    String
+  signature_goal Int
+  signatures     Signature[]
+}
+
+model Signature {
+  created    DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  content    String
+  petition   Petition @relation(fields: [petitionId], references: [id])
+  petitionId String
+
+  @@unique(fields: [userId, petitionId], name: "petitionUserSignature")
+}
