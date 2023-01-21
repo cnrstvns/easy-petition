@@ -3,7 +3,7 @@ import DiscordProvider from 'next-auth/providers/discord';
 
 export const authOptions = {
   pages: {
-    signin: '/auth/login',
+    signIn: '/auth/login',
   },
   providers: [
     DiscordProvider({

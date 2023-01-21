@@ -1,5 +1,5 @@
 import { unstable_getServerSession as getSession } from 'next-auth/next';
-import db from '../../../shared/db';
+import db from '~/lib/db';
 import { authOptions } from '../auth/[...nextauth]';
 
 export default async function handler(req, res) {
@@ -9,7 +9,9 @@ export default async function handler(req, res) {
     const session = await getSession(req, res, authOptions);
     if (!session) return res.status(401).end();
 
-    const user = await db.user.findUnique({ where: { email: session.user.email } });
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+    });
     if (!user) return res.status(401).end();
 
     const signature = await db.signature.findUnique({

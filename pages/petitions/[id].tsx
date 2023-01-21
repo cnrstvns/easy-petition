@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Petition, Signature, User } from '@prisma/client';
 import Layout from '../../components/shared/Layout';
 import SignPetition from '../../components/petitions/SignPetition';
 import ShareButton from '../../components/shared/ShareButton';
@@ -19,10 +20,27 @@ import ShareButton from '../../components/shared/ShareButton';
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
+type PetitionWithSignatureCount =
+  | (Petition & {
+      _count: {
+        signatures: number;
+      };
+      user: User;
+    })
+  | undefined;
+
+type SignatureWithUser = (Signature & { user: User }) | undefined;
+
 export default function Petitions() {
   const router = useRouter();
-  const { data: petition } = useSWR(['/api/v1/petitions', { id: router.query.id }]);
-  const { data: signatures } = useSWR(['/api/v1/signatures', { petition: router.query.id }]);
+  const { data: petition } = useSWR<PetitionWithSignatureCount>([
+    '/api/v1/petitions',
+    { id: router.query.id },
+  ]);
+  const { data: signatures } = useSWR<SignatureWithUser[]>([
+    '/api/v1/signatures',
+    { petition: router.query.id },
+  ]);
 
   const goalMet = petition?.signature_goal < petition?._count.signatures;
 
@@ -36,12 +54,16 @@ export default function Petitions() {
                 <div className="xl:col-span-2 xl:border-r xl:border-gray-200 xl:pr-8">
                   <div className="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b xl:pb-6">
                     <div className="flex items-center">
-                      <img className="h-10 w-10 rounded-full mr-3" src={petition?.user.avatar} />
+                      <img
+                        className="h-10 w-10 rounded-full mr-3"
+                        src={petition?.user.avatar}
+                      />
                       <div>
-                        <h1 className="text-2xl font-bold text-gray-900">{petition?.title}</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          {petition?.title}
+                        </h1>
                         <div className="text-sm text-gray-500">
-                          proposed by
-                          {' '}
+                          proposed by{' '}
                           <a href="#" className="font-medium text-gray-900">
                             {petition?.user.username}
                           </a>
@@ -56,42 +78,50 @@ export default function Petitions() {
                   <aside className="mt-8 xl:hidden">
                     <div className="space-y-5">
                       <div className="flex items-center space-x-2">
-                        {goalMet
-                          ? <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                          : <LockOpenIcon className="h-5 w-5 text-red-400" aria-hidden="true" />}
-                        <span className={clsx(
-                          'text-sm font-medium text-green-700',
-                          {
-                            'text-green-700': goalMet,
-                            'text-red-700': !goalMet,
-                          },
+                        {goalMet ? (
+                          <CheckCircleIcon
+                            className="h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <LockOpenIcon
+                            className="h-5 w-5 text-red-400"
+                            aria-hidden="true"
+                          />
                         )}
+                        <span
+                          className={clsx(
+                            'text-sm font-medium text-green-700',
+                            {
+                              'text-green-700': goalMet,
+                              'text-red-700': !goalMet,
+                            },
+                          )}
                         >
                           Goal
-                          {!goalMet && ' not'}
-                          {' '}
-                          reached
+                          {!goalMet && ' not'} reached
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <ChatBubbleLeftEllipsisIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        <ChatBubbleLeftEllipsisIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
                         <span className="text-sm font-medium text-gray-900">
-                          {petition?._count.signatures}
-                          {' '}
-                          signature
+                          {petition?._count.signatures} signature
                           {petition?._count.signatures > 1 ? 's' : ''}
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <CalendarIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        <CalendarIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
                         <span className="text-sm font-medium text-gray-900">
-                          Created on
-                          {' '}
-                          {dayjs(petition?.created).format('LLL')}
+                          Created on {dayjs(petition?.created).format('LLL')}
                         </span>
                       </div>
                     </div>
-
                   </aside>
                   <div className="py-5 xl:pt-6 xl:pb-0">
                     <span className="text-lg font-medium text-gray-900">
@@ -137,8 +167,7 @@ export default function Petitions() {
                                             </div>
                                           </div>
                                           <div className="mt-0.5 text-sm text-gray-500">
-                                            Signed
-                                            {' '}
+                                            Signed{' '}
                                             {dayjs(signature.created).fromNow()}
                                           </div>
                                         </div>
@@ -160,40 +189,43 @@ export default function Petitions() {
                 <aside className="hidden xl:block xl:pl-8">
                   <div className="space-y-5">
                     <div className="flex items-center space-x-2">
-                      {goalMet
-                        ? <CheckCircleIcon className="h-5 w-5" aria-hidden="true" />
-                        : <LockOpenIcon className="h-5 w-5 text-red-400" aria-hidden="true" />}
-                      <span className={clsx(
-                        'text-sm font-medium text-green-700',
-                        {
+                      {goalMet ? (
+                        <CheckCircleIcon
+                          className="h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <LockOpenIcon
+                          className="h-5 w-5 text-red-400"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span
+                        className={clsx('text-sm font-medium text-green-700', {
                           'text-green-700': goalMet,
                           'text-red-700': !goalMet,
-                        },
-                      )}
+                        })}
                       >
-                        Goal
-                        {' '}
-                        {!goalMet && 'not'}
-                        {' '}
-                        reached
+                        Goal {!goalMet && 'not'} reached
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <PencilSquareIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <PencilSquareIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <span className="text-sm font-medium text-gray-900">
-                        {petition?._count.signatures}
-                        /
-                        {petition?.signature_goal}
-                        {' '}
+                        {petition?._count.signatures}/{petition?.signature_goal}{' '}
                         signatures
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <CalendarIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      <CalendarIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <span className="text-sm font-medium text-gray-900">
-                        Created on
-                        {' '}
-                        {dayjs(petition?.created).format('LLL')}
+                        Created on {dayjs(petition?.created).format('LLL')}
                       </span>
                     </div>
                   </div>

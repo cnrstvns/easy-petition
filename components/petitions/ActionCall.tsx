@@ -6,7 +6,9 @@ export default function ActionCall() {
     <div className="bg-indigo-700 rounded-md mb-8">
       <div className="mx-auto max-w-2xl py-12 px-8 text-center sm:px-10 lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          <span className="block">Vote your friends out of a Discord server.</span>
+          <span className="block">
+            Vote your friends out of a Discord server.
+          </span>
           <span className="block">Get started today.</span>
         </h2>
         <button

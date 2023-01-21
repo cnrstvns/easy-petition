@@ -1,7 +1,6 @@
 import React from 'react';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-// import { PlusIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
@@ -11,7 +10,11 @@ export default function Example() {
   const { status, data } = useSession();
 
   const routes = [
-    { name: 'Petitions', href: '/petitions', current: router.pathname === '/petitions' },
+    {
+      name: 'Petitions',
+      href: '/petitions',
+      current: router.pathname === '/petitions',
+    },
   ];
 
   return (
@@ -49,7 +52,9 @@ export default function Example() {
                       key={item.name}
                       href={item.href}
                       className={clsx(
-                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        item.current
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                         'px-3 py-2 rounded-md text-sm font-medium',
                       )}
                       aria-current={item.current ? 'page' : undefined}
@@ -60,23 +65,15 @@ export default function Example() {
                 </div>
               </div>
               <div className="flex items-center">
-                {/* <div className="flex-shrink-0">
-                  <button
-                    type="button"
-                    className={clsx('relative inline-flex items-center rounded-md border',
-                      'border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white',
-                      'shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 ',
-                      'focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500')}
-                  >
-                    <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                    <span>New Petition</span>
-                  </button>
-                </div> */}
                 {status === 'authenticated' && (
                   <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
                     <div className="relative ml-3">
                       <div className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <img className="h-8 w-8 rounded-full" src={data?.user.image} alt="" />
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={data?.user.image}
+                          alt=""
+                        />
                       </div>
                     </div>
                   </div>
@@ -93,7 +90,9 @@ export default function Example() {
                   as="a"
                   href={item.href}
                   className={clsx(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    item.current
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block px-3 py-2 rounded-md text-base font-medium',
                   )}
                   aria-current={item.current ? 'page' : undefined}

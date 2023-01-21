@@ -1,12 +1,20 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import { useRouter } from 'next/router';
 
 export default function Hero() {
+  const router = useRouter();
+
+  const handleLogin = useCallback(() => router.push('/auth/login'), [router]);
+
   return (
     <div className="relative overflow-hidden bg-gray-50">
-      <div className="hidden sm:absolute sm:inset-y-0 sm:block sm:h-full sm:w-full" aria-hidden="true">
+      <div
+        className="hidden sm:absolute sm:inset-y-0 sm:block sm:h-full sm:w-full"
+        aria-hidden="true"
+      >
         <div className="relative mx-auto h-full max-w-7xl">
           <svg
             className="absolute right-full translate-y-1/4 translate-x-1/4 transform lg:translate-x-1/2"
@@ -24,10 +32,21 @@ export default function Hero() {
                 height={20}
                 patternUnits="userSpaceOnUse"
               >
-                <rect x={0} y={0} width={4} height={4} className="text-gray-200" fill="currentColor" />
+                <rect
+                  x={0}
+                  y={0}
+                  width={4}
+                  height={4}
+                  className="text-gray-200"
+                  fill="currentColor"
+                />
               </pattern>
             </defs>
-            <rect width={404} height={784} fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)" />
+            <rect
+              width={404}
+              height={784}
+              fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)"
+            />
           </svg>
           <svg
             className="absolute left-full -translate-y-3/4 -translate-x-1/4 transform md:-translate-y-1/2 lg:-translate-x-1/2"
@@ -45,18 +64,32 @@ export default function Hero() {
                 height={20}
                 patternUnits="userSpaceOnUse"
               >
-                <rect x={0} y={0} width={4} height={4} className="text-gray-200" fill="currentColor" />
+                <rect
+                  x={0}
+                  y={0}
+                  width={4}
+                  height={4}
+                  className="text-gray-200"
+                  fill="currentColor"
+                />
               </pattern>
             </defs>
-            <rect width={404} height={784} fill="url(#5d0dd344-b041-4d26-bec4-8d33ea57ec9b)" />
+            <rect
+              width={404}
+              height={784}
+              fill="url(#5d0dd344-b041-4d26-bec4-8d33ea57ec9b)"
+            />
           </svg>
         </div>
       </div>
 
-      <div className="relative pt-6 pb-16 sm:pb-24">
+      <div className="relative pt-6 pb-16 sm:pb-24 min-h-screen">
         <Popover>
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <nav className="relative flex items-center justify-between sm:h-10 md:justify-center" aria-label="Global">
+            <nav
+              className="relative flex items-center justify-between sm:h-10 md:justify-center"
+              aria-label="Global"
+            >
               <div className="flex flex-1 items-center md:absolute md:inset-y-0 md:left-0">
                 <div className="flex w-full items-center justify-between md:w-auto">
                   <a href="#">
@@ -79,6 +112,7 @@ export default function Hero() {
                 <span className="inline-flex rounded-md shadow">
                   <button
                     type="button"
+                    onClick={handleLogin}
                     className="inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-base font-medium text-indigo-600 hover:bg-gray-50"
                   >
                     Log in
@@ -118,7 +152,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <a
-                  href="/auth"
+                  href="/auth/login"
                   className="block w-full bg-gray-50 px-5 py-3 text-center font-medium text-indigo-600 hover:bg-gray-100"
                 >
                   Log in
@@ -131,19 +165,22 @@ export default function Hero() {
         <main className="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-              <span className="block xl:inline">Launch a petition </span>
-              {' '}
-              <span className="block text-indigo-600 xl:inline">in only seconds</span>
+              <span className="block xl:inline">Launch a petition </span>{' '}
+              <span className="block text-indigo-600 xl:inline">
+                in only seconds
+              </span>
             </h1>
             <div className="mx-auto mt-3 max-w-md text-base text-gray-500 sm:text-lg md:mt-5 md:max-w-3xl md:text-xl">
               Launching a petition shouldn't require a lengthy sign-up process
-              or result in your inbox being flooded with marketing emails.
-              I built this so I could troll my friends. Maybe you'll find a use for it too.
+              or result in your inbox being flooded with marketing emails. I
+              built this so I could troll my friends. Maybe you'll find a use
+              for it too.
             </div>
             <div className="mx-auto mt-5 max-w-md sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
                 <button
                   type="button"
+                  onClick={handleLogin}
                   className="flex w-full items-center justify-center rounded-md border border-transparent  px-8 py-3 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 md:py-3 md:px-10 md:text-lg"
                 >
                   Get started
